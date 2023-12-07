@@ -1,17 +1,7 @@
 from transformers import MarianMTModel, MarianTokenizer
+import math
 
 def translate_text_marian(input_text, target_language):
-    """
-    Translates the given input text to the specified target language using MarianMT model.
-    Text within curly brackets is excluded from translation.
-
-    Parameters:
-    - input_text: The text to be translated.
-    - target_language: The target language name (e.g., 'hindi').
-
-    Returns:
-    - The translated text.
-    """
     model_name = f'Helsinki-NLP/opus-mt-en-{target_language}'
     model = MarianMTModel.from_pretrained(model_name)
     tokenizer = MarianTokenizer.from_pretrained(model_name)
@@ -25,7 +15,14 @@ def translate_text_marian(input_text, target_language):
             if '}' in segment:
                 # Preserve text within curly brackets
                 preserved_text, remaining_text = segment.split('}', 1)
-                translated_segments.append(preserved_text + '}' + remaining_text)
+                print(f'preser : {preserved_text}')
+                print(f'remain : {remaining_text}')
+                remain = translate_text_marian(remaining_text, 'hi')
+                if not remain :
+                    translated_segments.append(preserved_text)
+                else :
+                    translated_segments.append(preserved_text + remain)
+                print(f'till here {translated_segments}')
             else:
                 # Translate text outside curly brackets
                 translated_input = tokenizer(segment, return_tensors="pt", truncation=True)
@@ -39,8 +36,7 @@ def translate_text_marian(input_text, target_language):
         print(f"Translation failed: {e}")
         return None
 
-# Example usage:
-input_text = "Hello, how are you? {This part should not be translated.} How is the weather?"
+input_text = input("enter what you want to :")
 target_language_name = 'hi'
 
 translated_text = translate_text_marian(input_text, target_language_name)
@@ -48,3 +44,24 @@ translated_text = translate_text_marian(input_text, target_language_name)
 if translated_text:
     print(f"Original Text: {input_text}")
     print(f"Translated Text ({target_language_name}): {translated_text}")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Example usage:
