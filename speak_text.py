@@ -1,6 +1,6 @@
 import subprocess
 
-def speak_word(word, voice='en', speed=150, pitch=50):
+def speak_word(word, voice='hi', speed=150, pitch=50):
     try:
         # Use subprocess to call eSpeak
         subprocess.run(['espeak', '-v', f'{voice}', '-s', str(speed), '-p', str(pitch), word])
@@ -8,5 +8,4 @@ def speak_word(word, voice='en', speed=150, pitch=50):
         print(f"Error: {e}")
 
 # Example usage
-word_to_speak = "Hello my name is transo, how may i help you ?"
-speak_word(word_to_speak, voice='en +f3', speed=140, pitch=40)
+
